@@ -25,10 +25,40 @@ To implement MESSAGE AUTHENTICATION CODE(MAC)
 5. Security: The security of the MAC relies on the secret key \( K \) and the strength of the hash function \( H \), ensuring that an attacker cannot forge a valid MAC without knowledge of the key.
 
 ## Program:
-
-
+```
+#include <stdio.h> 
+#include <string.h> 
+#define MAC_SIZE 32 
+void computeMAC(const char *key, const char *msg, char *mac) { 
+int klen = strlen(key), mlen = strlen(msg); 
+for (int i = 0; i < MAC_SIZE; i++) 
+mac[i] = key[i % klen] ^ msg[i % mlen]; 
+} 
+int main() { 
+char key[100], msg[100], mac[MAC_SIZE], recvMAC[MAC_SIZE]; 
+printf("Enter secret key: "); 
+scanf("%s", key); 
+printf("Enter message: "); 
+scanf("%s", msg); 
+computeMAC(key, msg, mac); 
+printf("Generated MAC (hex): "); 
+for (int i = 0; i < MAC_SIZE; i++) 
+printf("%02x", (unsigned char)mac[i]); 
+printf("\n"); 
+printf("Enter received MAC (hex): "); 
+for (int i = 0; i < MAC_SIZE; i++) 
+scanf("%2hhx", &recvMAC[i]); 
+if (memcmp(mac, recvMAC, MAC_SIZE) == 0) 
+printf("MAC verified. Message is authentic.\n"); 
+else 
+printf("MAC mismatch. Message is not authentic.\n"); 
+return 0; 
+}
+```
 
 ## Output:
+<img width="915" height="451" alt="Screenshot 2026-06-01 084442" src="https://github.com/user-attachments/assets/d96108b3-2e36-40b6-8afb-3c57859e72ff" />
+
 
 
 ## Result:
